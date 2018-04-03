@@ -1,6 +1,6 @@
 \documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.95in]{geometry} \newtheorem{theorem}{Theorem}
 \usepackage{tabto}
-	\NumTabs{20}
+    \NumTabs{20}
 \usepackage{fancyhdr}
 \usepackage{siunitx}
 \usepackage{gensymb}
@@ -10,9 +10,9 @@
 
 \renewcommand{\headrulewidth}{6pt}
 \lhead{ \Large  \fontfamily{lmdh}\selectfont
-CS 280 		\tab	\tab Computer Vision 
-\\Spring 2018	\tab	\tab Michael Luo, Alex Li}
-\rhead{\Large 	\fontfamily{lmdh}\selectfont	Homework 3}
+CS 280      \tab    \tab Computer Vision 
+\\Spring 2018   \tab    \tab Michael Luo, Alex Li}
+\rhead{\Large   \fontfamily{lmdh}\selectfont    Homework 3}
 
 
 \begin{document}
@@ -58,7 +58,7 @@ Results for Library:
  \num{1.38164930e-03} & \num{-9.63586245e-03} & \num{-2.60674702e-01} \\
 \end{bmatrix}
 \]
-\[ \text{Residual}= \num{1.0144671451144764e-05} \]
+\[ \text{Residual}= \num{1.0144671451144764e-05} \] The code can be found at the bottom of this report. 
 
 \end{mdframed}
 
@@ -72,13 +72,19 @@ In total, there are four solutions. Let $ E = U \Sigma V^T$, where $ U =\begin{b
  0 & 0 & 1 \\
 \end{bmatrix}
 \]
-Then we have \[ R = UR_{90\degree}V^T, R = UR_{90\degree}^T V^T \] and \[ t = \pm u_3 \] This in total makes four possibilities. In our code, if the determinant of $ R $ ended up being $ -1 $, we just set $ R $ to be negative.
+Then we have \[ R = UR_{90\degree}V^T, R = UR_{90\degree}^T V^T \] and \[ t = \pm u_3 \] This in total makes four possibilities. In our code, if the determinant of $ R $ ended up being $ -1 $, we just set $ R $ to be negative. The code can be found at the bottom of this report. 
 
 \end{mdframed}
 
 \subsection*{3. Find 3D Points}
 \begin{mdframed}
+We first solve the homogeneous system for $ A\textbf{X} =0$, where $ \textbf{X} $ is a vector of $X, Y, Z, W$ and $ A $ is a 4x4 matrix for $ x_1, y_1, x_2, y_2 $ with coefficients coming from the Triangulation equations found in the Homework PDF. The exact coefficients can be found in the code. \\\\ To solve the homogeneous system, we took the SVD and took the last column of $ V $, and normalized the vector by setting $ W =1$. Thus, we received our 3D prediction $ \textbf{X} $. Then, we projected $ \textbf{X} $ back to both camera image planes by doing $ \textbf{x}_1 = P_1 \textbf{X} $ and $  \textbf{x}_2 = P_2 \textbf{X} $.\\\\ To calculate the reconstruction error, we look the L2 norm between our projected points $ \textbf{x}_1 $ and $ \textbf{x}_2 $ and our real points  $ (x_1, y_1), (x_2, y_2) $. Then we summed it up over all matching points, dividing the reconstruction error by two times the number of matching points.\\\\Results for House:
+\[ \text{Reconstruction error} = 0.2378123445095882 \] Results for Library:
+\[ \text{Reconstruction error} = 0.31136431177829127\] The code can be found at the bottom of this report. 
+\end{mdframed}
 
+\subsection*{4. Plot 3D}
+\begin{mdframed}
 
 \end{mdframed}
 
