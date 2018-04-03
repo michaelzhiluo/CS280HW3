@@ -155,17 +155,19 @@ def find_3d_points(P1, P2, matches):
     '''
     return (solutions,error)
 
-def plot_3d(P1, P2, points):
+def plot_3d(C, points):
+    # -t = RC
+    print(C.shape)
     fig = plt.figure()
     ax = plt.axes(projection='3d')
 
-    ax.set_xlim3d(min(np.min(points[:,0]), P1[0][3],P2[0][3] ), max(np.max(points[:,0]), P1[0][3],P2[0][3]))
-    ax.set_ylim3d(min(np.min(points[:,1]), P1[1][3],P2[1][3] ), max(np.max(points[:,1]), P1[1][3],P2[1][3]))
-    ax.set_zlim3d(min(np.min(points[:,2]), P1[2][3],P2[2][3] ), max(np.max(points[:,2]), P1[2][3],P2[2][3]))
+    ax.set_xlim3d(min(np.min(points[:,0]), 0,C[0][0] ), max(np.max(points[:,0]), 0,C[0][0]))
+    ax.set_ylim3d(min(np.min(points[:,1]), 0,C[1][0] ), max(np.max(points[:,1]), 0,C[1][0]))
+    ax.set_zlim3d(min(np.min(points[:,2]), 0,C[2][0] ), max(np.max(points[:,2]), 0,C[2][0]))
 
     ax.scatter3D(points[:,0], points[:,1], points[:,2],c=points[:,2], cmap='rainbow')
-    ax.scatter3D(P1[0][3], P1[1][3], P1[2][3],marker = '^');
-    ax.scatter3D(P2[0][3], P2[1][3], P2[2][3],marker = '^');
+    ax.scatter3D(0, 0, 0,marker = '^');
+    ax.scatter3D(C[0][0], C[1][0], C[2][0],marker = '^');
     
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
@@ -219,7 +221,6 @@ def reconstruct_3d(name):
 
     (F, res_err) = fundamental_matrix(matches)  # <------------------------------------- You write this one!
     print(f"Residual in F = {res_err}")
-    print(F)
     E = K2.T @ F @ K1
 
     ## -------------------------------------------------------------------------
@@ -254,13 +255,12 @@ def reconstruct_3d(name):
     t2 = t[ti[j]]
     R2 = R[ri[j]]
     P2 = K2 @ np.concatenate([R2, t2[:, np.newaxis]], axis=1)
-
     # % compute the 3D points with the final P2
     points, _ = find_3d_points(P1, P2, matches) # <---------------------------------------------- You have already written this one!
 
     ## -------- plot points and centers of cameras ----------------------------
-
-    plot_3d(P1, P2, points) #<-------------------------------------------------------------- You write this one!
+    
+    plot_3d(-np.linalg.inv(R2).dot(t2[:, np.newaxis]), points) #<-------------------------------------------------------------- You write this one!
 
 
 # Main
