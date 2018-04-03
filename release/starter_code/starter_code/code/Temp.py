@@ -264,5 +264,5 @@ def reconstruct_3d(name):
 
 
 # Main
-reconstruct_3d("house")
+reconstruct_3d("library")
 
