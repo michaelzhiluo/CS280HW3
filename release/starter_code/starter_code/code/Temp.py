@@ -219,6 +219,7 @@ def reconstruct_3d(name):
 
     (F, res_err) = fundamental_matrix(matches)  # <------------------------------------- You write this one!
     print(f"Residual in F = {res_err}")
+    print(F)
     E = K2.T @ F @ K1
 
     ## -------------------------------------------------------------------------
@@ -263,5 +264,5 @@ def reconstruct_3d(name):
 
 
 # Main
-reconstruct_3d("library")
+reconstruct_3d("house")
 
