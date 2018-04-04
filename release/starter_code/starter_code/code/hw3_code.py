@@ -12,7 +12,7 @@ This function takes as input the name of the image pairs (i.e. 'house' or
 'library') and returns the 3D points as well as the camera matrices...but
 some functions are missing.
 NOTES
-(1) The code has been written so that it can be easily understood. It has 
+(1) The code has been written so that it can be easily understood. It has
 not been written for efficiency.
 (2) Don't make changes to this main function since I will run my
 reconstruct_3d.m and not yours. I only want from you the missing
@@ -40,7 +40,7 @@ def fundamental_matrix(matches):
     norm_img1 = T1.dot(unnorm_img1).T
     norm_img2 = T2.dot(unnorm_img2).T
 
-    A = np.array([norm_img1[:,0]*norm_img2[:,0], 
+    A = np.array([norm_img1[:,0]*norm_img2[:,0],
                   norm_img1[:,1]*norm_img2[:,0],
                   norm_img2[:,0],
                   norm_img1[:,0]*norm_img2[:,1],
@@ -49,7 +49,7 @@ def fundamental_matrix(matches):
                   norm_img1[:,0],
                   norm_img1[:,1],
                   np.ones((matches.shape[0]))]).T
-    
+
     # Rayleigh's Quotient Optimization Equation (Choose smallest eigenvalue with corresponding eigenvector in V)
     U,S,V = np.linalg.svd(A.T.dot(A))
     F = V[V.shape[0]-1]
@@ -79,7 +79,7 @@ def find_rotation_translation(E):
     W = np.array([[0,-1,0],[1,0,0],[0,0,1]])
     T_list = [U[:,2], -U[:,2]]
     R_list = [-U.dot(W).dot(V), -U.dot(W.T).dot(V)]
-    
+
     # Make sure the det(R)=1, !=-1
     #for i in R_list:
         #print(np.linalg.det(i))
@@ -108,7 +108,7 @@ def find_3d_points(P1, P2, matches):
         prediction2 = P2.dot(svd_solution.reshape((4, 1)))
         prediction2/=prediction2[2][0]
         prediction2 = prediction2.flatten()
-        
+
         error += ((prediction1[0] - x1)**2 + (prediction1[1] - y1)**2)**0.5
         error += ((prediction2[0] - x2)**2 + (prediction2[1] - y2)**2)**0.5
     solutions = np.array(solutions)
@@ -116,9 +116,10 @@ def find_3d_points(P1, P2, matches):
     error /= 2*matches.shape[0]
 
     #Applying least squares for every matching pair of points
+    # decided to use other method of solving instead
     '''
     for i in range(0, matches.shape[0]):
-        
+
         x1, y1, x2, y2 = matches[i][0], matches[i][1], matches[i][2], matches[i][3]
         lhs = []
         rhs = []
@@ -131,7 +132,7 @@ def find_3d_points(P1, P2, matches):
         rhs+= [[P1[1][3]-y1*P1[2][3]], [P2[1][3]-y2*P2[2][3]]]
         lhs = np.array(lhs)
         rhs = np.array(rhs)
-        
+
         ls_solution = np.array(np.linalg.inv(lhs.T.dot(lhs)).dot(lhs.T).dot(rhs))
         solutions += [ls_solution]
         #print(ls_solution)
@@ -144,7 +145,7 @@ def find_3d_points(P1, P2, matches):
         prediction2 = P2.dot(np.insert(ls_solution, 3, 1, axis =0))
         prediction2/=prediction2[2][0]
         prediction2 = prediction2.flatten()
-        
+
         #print(prediction2)
         #print(x2, y2)
         error += ((prediction1[0] - x1)**2 + (prediction1[1] - y1)**2)**0.5
@@ -168,7 +169,7 @@ def plot_3d(C, points):
     ax.scatter3D(points[:,0], points[:,1], points[:,2],c=points[:,2], cmap='rainbow')
     ax.scatter3D(0, 0, 0,marker = '^');
     ax.scatter3D(C[0][0], C[1][0], C[2][0],marker = '^');
-    
+
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
@@ -267,10 +268,9 @@ def reconstruct_3d(name):
     points, _ = find_3d_points(P1, P2, matches) # <---------------------------------------------- You have already written this one!
 
     ## -------- plot points and centers of cameras ----------------------------
-    
+
     plot_3d(-np.linalg.inv(R2).dot(t2[:, np.newaxis]), points) #<-------------------------------------------------------------- You write this one!
 
 
 # Main
 reconstruct_3d("library")
-
