@@ -153,7 +153,7 @@ def find_3d_points(P1, P2, matches):
     error/=2*matches.shape[0]
     print(error)
     '''
-    return (solutions,error)
+    return (solutions, error)
 
 def plot_3d(C, points):
     # -t = RC
@@ -184,16 +184,22 @@ def reconstruct_3d(name):
     data_dir = "../data/{}".format(name)
 
     # images
-    I1 = cv2.imread(f"{data_dir}/{name}1.jpg")
-    I2 = cv2.imread(f"{data_dir}/{name}2.jpg")
+    # I1 = cv2.imread(f"{data_dir}/{name}1.jpg")
+    I1 = cv2.imread(data_dir + "/" + name + "1.jpg")
+    # I2 = cv2.imread(f"{data_dir}/{name}2.jpg")
+    I2 = cv2.imread(data_dir + "/" + name + "2.jpg")
     # of shape (H,W,C)
 
     # K matrices
-    K1 = scipy.io.loadmat(f"{data_dir}/{name}1_K.mat")["K"]
-    K2 = scipy.io.loadmat(f"{data_dir}/{name}2_K.mat")["K"]
+    #K1 = scipy.io.loadmat(f"{data_dir}/{name}1_K.mat")["K"]
+    #K2 = scipy.io.loadmat(f"{data_dir}/{name}2_K.mat")["K"]
+    K1 = scipy.io.loadmat(data_dir + "/" + name +"1_K.mat")["K"]
+    K2 = scipy.io.loadmat(data_dir+ "/" + name + "2_K.mat")["K"]
+
 
     # corresponding points
-    lines = open(f"{data_dir}/{name}_matches.txt").readlines()
+    # lines = open(f"{data_dir}/{name}_matches.txt").readlines()
+    lines = open(data_dir + "/" + name+ "_matches.txt").readlines()
     matches = np.array([list(map(float, line.split())) for line in lines])
 
     # this is a N x 4 where:
@@ -220,7 +226,8 @@ def reconstruct_3d(name):
     # their corresponding epipolar lines
 
     (F, res_err) = fundamental_matrix(matches)  # <------------------------------------- You write this one!
-    print(f"Residual in F = {res_err}")
+    # print(f"Residual in F = {res_err}")
+    print("Residual in F =", res_err)
     E = K2.T @ F @ K1
 
     ## -------------------------------------------------------------------------
@@ -250,8 +257,8 @@ def reconstruct_3d(name):
     (ti,ri) = np.where(num_points==np.max(num_points))
 
     j = 0 # pick one out the best combinations
-    print(f"Reconstruction error = {errs[ti[j],ri[j]]}")
-
+    # print(f"Reconstruction error = {errs[ti[j],ri[j]]}")
+    print("Reconstruction error = ", errs[ti[j],ri[j]])
     t2 = t[ti[j]]
     R2 = R[ri[j]]
     P2 = K2 @ np.concatenate([R2, t2[:, np.newaxis]], axis=1)
@@ -264,5 +271,5 @@ def reconstruct_3d(name):
 
 
 # Main
-reconstruct_3d("library")
+reconstruct_3d("house")
 
