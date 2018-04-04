@@ -172,6 +172,7 @@ def plot_3d(C, points):
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
+    ax.view_init(10, 90)
 
     plt.show()
 
@@ -271,5 +272,5 @@ def reconstruct_3d(name):
 
 
 # Main
-reconstruct_3d("house")
+reconstruct_3d("library")
 
